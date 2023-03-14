@@ -1,11 +1,11 @@
 import Utils.RomanConverter;
 public class Main
 {
-    enum Operation { multiply, divide, plus, minus }
     public static void main(String[] args)
     {
-        System.out.println(calc("44+11+22"));
+        System.out.println(calc("10+11"));
     }
+
     public static String calc(String input)
     {
         if(input == null)
@@ -15,13 +15,7 @@ public class Main
         String[] operatorChars = {"+","-","*","/"};
         String[] regexChars = {"\\+", "-","\\*", "/"};
         int operatorIndex = -1;
-        boolean isFirstNumberNegative = false;
-        Operation operation = Operation.plus;
 
-        if(input.startsWith("-"))
-        {
-            isFirstNumberNegative = true;
-        }
         for (int i = 0; i < operatorChars.length; i++)
         {
             if(input.contains(operatorChars[i]))
@@ -35,33 +29,6 @@ public class Main
             throw new ArrayIndexOutOfBoundsException("Выражение неверно");
         }
         String[] data = input.split(regexChars[operatorIndex]);
-        if (isFirstNumberNegative)
-        {
-            if (data[1].contains("*"))
-            {
-                String[] data1 = data[1].split("\\*");
-                data[0] = "-"+data1[0];
-                data[1] = data1[1];
-                operation = Operation.multiply;
-            }
-            else if(data[1].contains("/"))
-            {
-                String[] data2 = data[1].split("/");
-                data[0] = "-"+data2[0];
-                data[1] = data2[1];
-                operation = Operation.divide;
-            }else if (operatorChars[operatorIndex].equals("-"))
-            {
-                data[0] = "-"+data[1];
-                if (data.length == 2)
-                {
-                    throw new ArrayIndexOutOfBoundsException("Выражение неверно");
-                }
-                data[1] = data[2];
-                data[2] = null;
-                operation = Operation.minus;
-            }
-        }
         int a,b,result = 0;
         for (int i = 2; i < data.length; i++)
         {
@@ -82,17 +49,10 @@ public class Main
             {
                 a = Integer.parseInt(data[0]);
                 b = Integer.parseInt(data[1]);
-                if(isFirstNumberNegative)
-                {
-                    result = switch (operation)
-                      {
-                        case multiply -> a * b;
-                        case divide -> a / b;
-                        case plus -> a + b;
-                        default -> a - b;
-                      };
-                    return String.valueOf(result);
-                }
+            }
+            if (a > 10 || b > 10)
+            {
+                throw new IllegalArgumentException("Строка должна принимать на вход числа от 1 до 10");
             }
             String operator = operatorChars[operatorIndex];
             switch (operator)
